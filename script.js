@@ -104,14 +104,23 @@ function normalizeDateToISO(val) {
   if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
 
   // DD/MM/YYYY atau DD-MM-YYYY
-  const dmy = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-  if (dmy) {
-    const a = Number(dmy[1]), b = Number(dmy[2]);
-    // Jika bagian pertama > 12, pasti DD/MM/YYYY
-    return a > 12
-      ? `${dmy[3]}-${pad2(b)}-${pad2(a)}`
-      : `${dmy[3]}-${pad2(b)}-${pad2(a)}`; // asumsi DD/MM/YYYY (format Indonesia)
-  }
+  const mdy = str.match(
+      /^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/
+    );
+
+    if (mdy) {
+
+      const month =
+          Number(mdy[1]);
+
+      const day =
+          Number(mdy[2]);
+
+      const year =
+          Number(mdy[3]);
+
+      return `${year}-${pad2(month)}-${pad2(day)}`;
+    }
 
   return null;
 }
@@ -133,18 +142,49 @@ function isDateToday(val) {
 // 7. NORMALISASI WAKTU
 // ─────────────────────────────────────────────
 
-function normalizeTime(val) {
-  if (val === null || val === undefined) return "";
-  if (typeof val === "string") {
-    const m = val.trim().match(/^(\d{1,2}):(\d{2})/);
-    return m ? `${pad2(Number(m[1]))}:${m[2]}` : "";
-  }
-  if (val instanceof Date) return `${pad2(val.getHours())}:${pad2(val.getMinutes())}`;
-  if (typeof val === "number") {
-    const min = Math.round(val * 24 * 60);
-    return `${pad2(Math.floor(min / 60))}:${pad2(min % 60)}`;
-  }
-  return "";
+function normalizeTime(val){
+
+    if(val == null)
+        return "";
+
+    const str =
+        String(val).trim();
+
+    // Format Google GViz
+    const gviz =
+        str.match(
+            /Date\(\d+,\d+,\d+,(\d+),(\d+),?(\d+)?\)/
+        );
+
+    if(gviz){
+
+        const hh =
+            pad2(gviz[1]);
+
+        const mm =
+            pad2(gviz[2]);
+
+        return `${hh}:${mm}`;
+    }
+
+    // Format normal 08:00
+    const normal =
+        str.match(
+            /^(\d{1,2}):(\d{2})/
+        );
+
+    if(normal){
+
+        return (
+            pad2(normal[1])
+            +
+            ":"
+            +
+            normal[2]
+        );
+    }
+
+    return "";
 }
 
 // ─────────────────────────────────────────────
@@ -199,6 +239,15 @@ function parseGvizResponse(rawText) {
     };
 
     // ── FILTER TANGGAL ──
+
+      console.log(
+    "RAW DATE:",
+    get("date"),
+    "ISO:",
+    normalizeDateToISO(get("date")),
+    "TODAY:",
+    getTodayISO()
+  );
     if (!isDateToday(get("date"))) return;
 
     const room  = String(get("room")  ?? "").trim().toUpperCase();
@@ -212,6 +261,15 @@ function parseGvizResponse(rawText) {
     const participants = typeof rawP === "number"
       ? Math.round(rawP)
       : parseInt(String(rawP ?? "0"), 10) || 0;
+
+      console.log({
+      room,
+      title,
+      startRaw: get("start"),
+      endRaw: get("end"),
+      start,
+      end
+    });
 
     if (!room || !title || !start || !end) return;
 
