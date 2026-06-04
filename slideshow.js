@@ -4,10 +4,16 @@ const pages = [
     "dual-arbei.html"
 ];
 
-const current =
+let current =
 window.location.pathname
 .split("/")
 .pop();
+
+if(
+    current === ""
+){
+    current = "index.html";
+}
 
 const index =
 pages.indexOf(current);
@@ -15,7 +21,7 @@ pages.indexOf(current);
 setTimeout(()=>{
 
     const next =
-    (index+1)
+    (index + 1)
     %
     pages.length;
 
