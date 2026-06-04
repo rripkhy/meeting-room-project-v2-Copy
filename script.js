@@ -98,6 +98,20 @@ function normalizeDateToISO(val) {
 
   const str = String(val).trim();
 
+  // FORMAT GVIZ
+  const gviz = str.match(
+    /^Date\((\d{4}),(\d{1,2}),(\d{1,2})/
+  );
+
+  if (gviz) {
+
+    const year  = Number(gviz[1]);
+    const month = Number(gviz[2]) + 1;
+    const day   = Number(gviz[3]);
+
+    return `${year}-${pad2(month)}-${pad2(day)}`;
+  }
+
   // Format: 4-Jun-2026
   const monthText = str.match(
     /^(\d{1,2})\-([A-Za-z]{3})\-(\d{4})$/
@@ -106,18 +120,18 @@ function normalizeDateToISO(val) {
   if (monthText) {
 
     const months = {
-      jan: "01",
-      feb: "02",
-      mar: "03",
-      apr: "04",
-      may: "05",
-      jun: "06",
-      jul: "07",
-      aug: "08",
-      sep: "09",
-      oct: "10",
-      nov: "11",
-      dec: "12"
+      jan:"01",
+      feb:"02",
+      mar:"03",
+      apr:"04",
+      may:"05",
+      jun:"06",
+      jul:"07",
+      aug:"08",
+      sep:"09",
+      oct:"10",
+      nov:"11",
+      dec:"12"
     };
 
     return `${monthText[3]}-${
