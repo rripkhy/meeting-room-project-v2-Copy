@@ -1,0 +1,201 @@
+body{
+    margin:0;
+    background:#eef2ef;
+    font-family:Arial,sans-serif;
+}
+
+.header{
+    height:80px;
+    background:#006b2d;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:32px;
+    font-weight:bold;
+}
+
+.dual-container{
+    display:flex;
+    gap:20px;
+    padding:15px;
+    height:calc(100hv - 100px);
+}
+
+.room-column{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+}
+
+.room-header{
+    background:#006b2d;
+    color:white;
+    padding:15px 20px;
+    border-radius:12px;
+    margin-bottom:10px;
+}
+
+.room-name{
+    font-size:28px;
+    font-weight:bold;
+}
+
+.day-row{
+    display:flex;
+    height:180px;
+    margin-bottom:10px;
+}
+
+.day-label{
+    width:66px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+.day-name{
+    font-size:24px;
+    font-weight:bold;
+    color:#006b2d;
+}
+
+.day-hours{
+    font-size:9px;
+    line-height:8px;
+    color:#8a8a8a;
+    text-align:center;
+}
+
+.day-date{
+    font-size:16x;
+    font-weight:600;
+    color:#888;
+}
+
+.timeline{
+    flex:1;
+    position:relative;
+    background:white;
+    border-radius:12px;
+    border:1px solid #dfe5df;
+    min-height:140px;
+    overflow:hidden;
+}
+
+.timeline-header{
+    display:flex;
+    margin-bottom:6px;
+}
+
+.timeline-spacer{
+    width:70px;
+}
+
+.timeline-hours{
+    flex:1;
+    display:grid;
+    grid-template-columns:repeat(12,1fr);
+    font-size:16px;
+    font-weight:700;
+    color:#6b7280;
+    text-align:center;
+    margin-bottom:8px;
+}
+
+.hour-line{
+    position:absolute;
+    top:0;
+    bottom:0;
+    width:1px;
+    background:#e0e0e0;
+}
+
+.meeting-block{
+    position:absolute;
+    top:8px;
+    min-width:12px;
+    min-height:165px;
+    border-radius:10px;
+    padding:8px;
+    color:white;
+    background:
+    linear-gradient(
+        180deg,
+        #ff6666,
+        #ef2222
+    );
+    box-sizing:border-box;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    box-shadow:
+    0 2px 8px rgba(0,0,0,.15);
+    overflow:hidden
+}
+
+.meeting-title{
+    font-size:16px;
+    font-weight:700;
+    line-height:1.2;
+    margin-bottom:8px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.meeting-time{
+    font-size:16px;
+    font-weight:700;
+    margin-bottom:6px;
+}
+
+.meeting-participant{
+    font-size:15px;
+}
+
+.room-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 24px;
+
+    min-height:80px;
+}
+
+.room-label{
+
+    font-size:16px;
+
+    letter-spacing:4px;
+}
+
+.utilization{
+    text-align:right;
+}
+
+.util-badge{
+    background:
+    rgba(255,255,255,.2);
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.booking-count{
+    margin-top:6px;
+    font-size:12px;
+
+}
+
+.hour-label{
+    position:absolute;
+    bottom:5px;
+    font-size:10px;
+    color:#8c8c8c;
+    transform:
+    translateX(-50%);
+}

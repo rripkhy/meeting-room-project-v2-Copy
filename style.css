@@ -1,0 +1,588 @@
+/* ============================================================
+   EMP JAPEX – Meeting Room Dashboard
+   style.css
+   Font: Barlow Condensed (judul) + Plus Jakarta Sans (body)
+   ============================================================ */
+
+/* ── CSS Variables ── */
+:root {
+  --green-dark:    #1a4731;
+  --green-mid:     #1e5c3a;
+  --green-light:   #22703f;
+  --green-accent:  #27ae60;
+  --green-badge:   #d4edda;
+  --green-text:    #155724;
+
+  --red-main:      #e53935;
+  --red-dark:      #b71c1c;
+  --red-light:     #ef5350;
+
+  --white:         #ffffff;
+  --off-white:     #f4f7f5;
+  --gray-50:       #f0f4f2;
+  --gray-100:      #e4e9e6;
+  --gray-200:      #c8d3cc;
+  --gray-400:      #8a9e93;
+  --gray-600:      #4a5e53;
+  --gray-800:      #1e2e25;
+
+  --shadow-sm:     0 1px 4px rgba(0,0,0,0.08);
+  --shadow-md:     0 4px 16px rgba(0,0,0,0.10);
+  --shadow-lg:     0 8px 32px rgba(0,0,0,0.14);
+
+  --radius-sm:     6px;
+  --radius-md:     12px;
+  --radius-lg:     18px;
+
+  --header-height:      88px;   /* lebih tinggi agar logo & teks lega */
+  --room-header-height: 88px;
+  --hour-height:        66px;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  /* Plus Jakarta Sans: modern, professional, sangat readable */
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  color: var(--gray-800);
+  background: var(--off-white);
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: linear-gradient(135deg, #0f2e1e 0%, var(--green-dark) 40%, var(--green-mid) 100%);
+  padding: 0 32px;
+  height: var(--header-height);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.22);
+  border-bottom: 2px solid rgba(255,255,255,0.07);
+}
+
+/* ── Brand: logo kiri ── */
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.brand-logo {
+  display: block;
+  object-fit: contain;
+  /* Sedikit shadow agar kontras di atas bg gelap */
+  filter: drop-shadow(0 1px 4px rgba(0,0,0,0.35));
+}
+.brand-logo--emp {
+  height: 44px;
+  width: auto;
+}
+.brand-logo--japex {
+  height: 38px;
+  width: auto;
+}
+
+/* Garis pemisah vertikal tipis di antara 2 logo */
+.brand-divider {
+  width: 1px;
+  height: 36px;
+  background: rgba(255,255,255,0.22);
+  flex-shrink: 0;
+}
+
+/* ── Center: judul ── */
+.header-center {
+  text-align: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.header-title {
+  /* Barlow Condensed: tegas, profesional, cocok untuk header informasi */
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 2.2rem;        /* jauh lebih besar & terbaca */
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--white);
+  line-height: 1.15;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 20px;
+  padding: 3px 14px;
+  color: rgba(255,255,255,0.88);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 0 0 rgba(74,222,128,0.6);
+  animation: live-pulse 2s infinite;
+  flex-shrink: 0;
+}
+@keyframes live-pulse {
+  0%   { box-shadow: 0 0 0 0   rgba(74,222,128,0.6); }
+  70%  { box-shadow: 0 0 0 9px rgba(74,222,128,0); }
+  100% { box-shadow: 0 0 0 0   rgba(74,222,128,0); }
+}
+
+.header-tz {
+  color: rgba(255,255,255,0.55);
+  margin-left: 2px;
+}
+
+/* ── Clock: kanan ── */
+.header-clock {
+  text-align: right;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.clock-time {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1;
+  letter-spacing: 0.06em;
+}
+.clock-date {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1rem;
+  color: rgba(255,255,255,0.70);
+  margin-top: 3px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   LOADING & ERROR
+   ============================================================ */
+.loading-overlay {
+  position: fixed;
+  inset: var(--header-height) 0 0 0;
+  background: rgba(244,247,245,0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  backdrop-filter: blur(4px);
+  transition: opacity 0.4s ease;
+}
+.loading-overlay.hidden { opacity: 0; pointer-events: none; }
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: var(--green-dark);
+  font-size: 1rem;
+  font-weight: 600;
+}
+.loading-spinner i { font-size: 2.5rem; color: var(--green-accent); }
+
+.error-banner {
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+  color: #856404;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* ============================================================
+   MAIN & SCHEDULE GRID
+   ============================================================ */
+.dashboard-main {
+  position: relative;
+  padding: 20px 20px 0;
+  overflow-x: auto;
+  min-height: calc(100vh - var(--header-height) - 60px);
+}
+
+.schedule-grid {
+  display: flex;
+  gap: 12px;
+  min-width: 700px;
+}
+
+/* ── Time Sidebar ── */
+.time-sidebar {
+  flex: 0 0 58px;
+  display: flex;
+  flex-direction: column;
+}
+.room-header-spacer { height: var(--room-header-height); flex-shrink: 0; }
+.time-slot-label {
+  height: var(--hour-height);
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding-right: 10px;
+  padding-top: 3px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1rem;
+  color: var(--gray-400);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+/* ── Room Column ── */
+.room-column {
+  flex: 1;
+  min-width: 165px;
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.room-column:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+/* Room Header */
+.room-header {
+  height: var(--room-header-height);
+  padding: 14px 16px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 1px solid var(--gray-100);
+  flex-shrink: 0;
+}
+.room-header-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.room-icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.room-icon-wrap.available { background: var(--green-badge); color: var(--green-text); }
+.room-icon-wrap.in-use    { background: #fde8e8; color: var(--red-dark); }
+
+.room-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gray-800);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.status-badge.available {
+  background: var(--green-badge);
+  color: var(--green-text);
+  border: 1px solid rgba(39,174,96,0.25);
+}
+.status-badge.in-use {
+  background: #fde8e8;
+  color: var(--red-dark);
+  border: 1px solid rgba(229,57,53,0.25);
+}
+
+/* ── Timeline ── */
+.timeline-container {
+  position: relative;
+  flex: 1;
+}
+.hour-line {
+  position: absolute;
+  left: 0; right: 0;
+  height: 1px;
+  background: var(--gray-100);
+}
+
+/* Now indicator */
+.now-indicator {
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  background: var(--red-main);
+  z-index: 10;
+  pointer-events: none;
+}
+.now-indicator::before {
+  content: '';
+  position: absolute;
+  left: -4px; top: 50%;
+  transform: translateY(-50%);
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--red-main);
+}
+
+/* ── Booking Card ── */
+.booking-card {
+  position: absolute;
+  left: 7px;
+  right: 7px;
+  background: linear-gradient(
+    150deg,
+    #ef5350 0%,
+    #e53935 55%,
+    #b71c1c 100%
+  );
+  border-radius: var(--radius-md);
+  padding: 10px 13px;
+  padding-bottom: 10px;
+  min-height: 74px;
+  color: var(--white);
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    filter 0.18s ease;
+  box-shadow:
+    0 4px 14px rgba(229,57,53,0.35);
+  z-index: 5;
+}
+.booking-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px; height: 100%;
+  background: rgba(255,255,255,0.38);
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+.booking-card:hover {
+  transform: translateY(-2px) scale(1.015);
+  box-shadow: 0 8px 24px rgba(229,57,53,0.45);
+  filter: brightness(1.07);
+}
+
+.booking-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.1;
+}
+.booking-time {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0.90;
+  margin-bottom: 5px;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+}
+.booking-participants {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0.85;
+  line-height: 1.1;
+}
+.booking-card.compact .booking-participants { display: none; }
+.booking-card.compact .booking-time { margin-bottom: 0; }
+
+/* Empty state */
+.empty-state {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: var(--gray-200);
+  font-size: 0.75rem;
+  font-weight: 600;
+  pointer-events: none;
+  letter-spacing: 0.02em;
+}
+.empty-state i { font-size: 1.8rem; display: block; margin-bottom: 7px; }
+
+/* ============================================================
+   FOOTER / LEGEND
+   ============================================================ */
+.app-footer {
+  position: sticky;
+  bottom: 0;
+  background: var(--white);
+  border-top: 1px solid var(--gray-100);
+  padding: 10px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: 0 -2px 14px rgba(0,0,0,0.07);
+  z-index: 90;
+}
+.legend { display: flex; gap: 22px; }
+.legend-item { display: flex; align-items: center; gap: 9px; }
+.legend-dot {
+  width: 14px; height: 14px;
+  border-radius: 4px; flex-shrink: 0;
+}
+.legend-dot--inuse     { background: var(--red-main); }
+.legend-dot--available { background: var(--green-accent); }
+.legend-item strong {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--gray-800);
+}
+.legend-item span {
+  font-size: 0.7rem;
+  color: var(--gray-400);
+}
+.footer-contact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-100);
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 0.75rem;
+  color: var(--gray-600);
+  font-weight: 600;
+}
+.footer-contact i { color: var(--green-accent); }
+
+/* ============================================================
+   TOOLTIP
+   ============================================================ */
+.tooltip-popup {
+  position: fixed;
+  background: var(--white);
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-md);
+  padding: 13px 16px;
+  box-shadow: var(--shadow-lg);
+  z-index: 999;
+  font-size: 0.8rem;
+  min-width: 165px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.tooltip-popup.visible { opacity: 1; transform: translateY(0); }
+.tooltip-popup strong {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  display: block;
+  margin-bottom: 7px;
+  color: var(--gray-800);
+}
+.tooltip-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--gray-600);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.tooltip-row i { width: 14px; color: var(--red-main); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  :root {
+    --header-height: auto;
+    --hour-height: 54px;
+    --room-header-height: 76px;
+  }
+  .app-header {
+    padding: 10px 16px;
+    height: auto;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .header-title   { font-size: 1.2rem; }
+  .clock-time     { font-size: 1.9rem; }
+  .brand-logo--emp   { height: 40px; }
+  .brand-logo--japex { height: 30px; }
+
+  .dashboard-main { padding: 12px 10px 0; }
+  .schedule-grid  { gap: 8px; }
+  .booking-card   { left: 4px; right: 4px; padding: 7px 9px; }
+  .booking-title  { font-size: 0.8rem; }
+
+  .app-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 16px;
+  }
+}
+
+@media (max-width: 540px) {
+  .header-center { width: 100%; order: 3; text-align: left; }
+  .header-tz { display: none; }
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.room-column { animation: fadeSlideIn 0.4s ease both; }
+.room-column:nth-child(2) { animation-delay: 0.06s; }
+.room-column:nth-child(3) { animation-delay: 0.12s; }
+.room-column:nth-child(4) { animation-delay: 0.18s; }
+.room-column:nth-child(5) { animation-delay: 0.24s; }
+.booking-card { animation: fadeSlideIn 0.3s ease both; }
