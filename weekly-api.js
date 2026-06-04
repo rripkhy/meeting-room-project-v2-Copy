@@ -1,50 +1,6 @@
 const SHEET_ID =
 "1b-pSFQ2HehQnjOF_e1QFZKKxgLWNaivNf9iRJrWnFVk";
 
-function getCurrentMonday(){
-
-    const today =
-        new Date();
-
-    const monday =
-        new Date(today);
-
-    monday.setHours(
-        0,0,0,0
-    );
-
-    monday.setDate(
-        today.getDate()
-        -
-        (
-            today.getDay() === 0
-            ? 6
-            : today.getDay()-1
-        )
-    );
-
-    return monday;
-}
-
-function getCurrentFriday(){
-
-    const monday =
-        getCurrentMonday();
-
-    const friday =
-        new Date(monday);
-
-    friday.setDate(
-        monday.getDate()+4
-    );
-
-    friday.setHours(
-        23,59,59,999
-    );
-
-    return friday;
-}
-
 async function fetchWeeklySchedule(){
 
     const url =
@@ -89,9 +45,7 @@ async function fetchWeeklySchedule(){
                 ).toUpperCase(),
 
             date:
-                String(
-                    c[1]?.f || ""
-                ).trim(),
+                c[1]?.f || c[1]?.v,
 
             start:
                 c[2]?.f || c[2]?.v,
@@ -109,31 +63,5 @@ async function fetchWeeklySchedule(){
 
     });
 
-    const monday =
-    getCurrentMonday();
-
-const friday =
-    getCurrentFriday();
-
-const filtered =
-    results.filter(item => {
-
-        const [month,day,year] =
-            item.date.split(/[\/\-]/);
-
-        const d =
-            new Date(
-                Number(year),
-                Number(month)-1,
-                Number(day)
-            );
-
-        return (
-            d >= monday &&
-            d <= friday
-        );
-
-    });
-
-return filtered;
+    return results;
 }
