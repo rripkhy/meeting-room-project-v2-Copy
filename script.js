@@ -93,34 +93,51 @@ function getTodayDayNames() {
 }
 
 function normalizeDateToISO(val) {
+
   if (!val && val !== 0) return null;
+
   const str = String(val).trim();
 
-  // Format gviz: "Date(2026,4,27)" — bulan 0-indexed!
-  const gviz = str.match(/^Date\((\d{4}),(\d{1,2}),(\d{1,2})\)/);
-  if (gviz) return `${gviz[1]}-${pad2(Number(gviz[2]) + 1)}-${pad2(Number(gviz[3]))}`;
+  // Format: 4-Jun-2026
+  const monthText = str.match(
+    /^(\d{1,2})\-([A-Za-z]{3})\-(\d{4})$/
+  );
 
-  // ISO: "2026-05-27"
-  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+  if (monthText) {
 
-  // DD/MM/YYYY atau DD-MM-YYYY
+    const months = {
+      jan: "01",
+      feb: "02",
+      mar: "03",
+      apr: "04",
+      may: "05",
+      jun: "06",
+      jul: "07",
+      aug: "08",
+      sep: "09",
+      oct: "10",
+      nov: "11",
+      dec: "12"
+    };
+
+    return `${monthText[3]}-${
+      months[monthText[2].toLowerCase()]
+    }-${pad2(monthText[1])}`;
+  }
+
+  // Format: 06-04-2026 atau 06/04/2026
   const mdy = str.match(
-      /^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/
-    );
+    /^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/
+  );
 
-    if (mdy) {
+  if (mdy) {
 
-      const month =
-          Number(mdy[1]);
+    const month = Number(mdy[1]);
+    const day   = Number(mdy[2]);
+    const year  = Number(mdy[3]);
 
-      const day =
-          Number(mdy[2]);
-
-      const year =
-          Number(mdy[3]);
-
-      return `${year}-${pad2(month)}-${pad2(day)}`;
-    }
+    return `${year}-${pad2(month)}-${pad2(day)}`;
+  }
 
   return null;
 }
