@@ -239,19 +239,28 @@ html, body {
   display: flex;
   flex-direction: column;
 }
-.room-header-spacer { height: var(--room-header-height); flex-shrink: 0; }
-.time-slot-label {
-  height: var(--hour-height);
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-end;
-  padding-right: 10px;
-  padding-top: 3px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 1rem;
-  color: var(--gray-400);
-  font-weight: 600;
-  letter-spacing: 0.03em;
+
+.room-header{
+    height:var(--room-header-height);
+    min-height:var(--room-header-height);
+}
+
+.room-header-spacer{
+    height:var(--room-header-height);
+    min-height:var(--room-header-height);
+}
+
+.time-slot-label{
+    height:var(--hour-height);
+    display:flex;
+    align-items:flex-start;
+    justify-content:flex-end;
+    padding-right:10px;
+    padding-top:4px;
+    color:#6f8c8c;
+    font-size:18px;
+    font-weight:500;
+    flex-shrink:0;
 }
 
 /* ── Room Column ── */
@@ -332,10 +341,15 @@ html, body {
 }
 
 /* ── Timeline ── */
-.timeline-container {
-  position: relative;
-  flex: 1;
+.timeline-container{
+    position:relative;
+    flex:1;
+
+    height:calc(
+        (18 - 7) * 66px
+    );
 }
+
 .hour-line {
   position: absolute;
   left: 0; right: 0;
@@ -365,8 +379,8 @@ html, body {
 /* ── Booking Card ── */
 .booking-card {
   position: absolute;
-  left: 7px;
-  right: 7px;
+  left: 4px;
+  right: 4px;
   background: linear-gradient(
     150deg,
     #ef5350 0%,
@@ -374,9 +388,10 @@ html, body {
     #b71c1c 100%
   );
   border-radius: var(--radius-md);
-  padding: 10px 13px;
+  padding: 8px 10px;
   padding-bottom: 10px;
-  min-height: 74px;
+  min-height: 0px;
+  height:auto;
   color: var(--white);
   overflow: hidden;
   cursor: pointer;
@@ -404,18 +419,18 @@ html, body {
 
 .booking-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 700;
   letter-spacing: 0.03em;
   margin-bottom: 4px;
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.1;
+  text-overflow: hidden;
+  line-height: 1.15;
 }
 .booking-time {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   opacity: 0.90;
   margin-bottom: 5px;
@@ -427,13 +442,26 @@ html, body {
   align-items: center;
   gap: 5px;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   opacity: 0.85;
   line-height: 1.1;
 }
-.booking-card.compact .booking-participants { display: none; }
-.booking-card.compact .booking-time { margin-bottom: 0; }
+.booking-card.compact{
+    padding:6px 10px;
+}
+
+.booking-card.compact .booking-title{
+    font-size:1rem;
+}
+
+.booking-card.compact .booking-time{
+    font-size:0.75rem;
+}
+
+.booking-card.compact .booking-participants{
+    display:none;
+}
 
 /* Empty state */
 .empty-state {
@@ -541,7 +569,7 @@ html, body {
 @media (max-width: 768px) {
   :root {
     --header-height: auto;
-    --hour-height: 54px;
+    --hour-height: 80px;
     --room-header-height: 76px;
   }
   .app-header {
