@@ -97,6 +97,12 @@ function normalizeDateToISO(val) {
   if (!val && val !== 0) return null;
 
   const str = String(val).trim();
+   console.log(
+  "DATE STRING:",
+  str,
+  "TYPE:",
+  typeof str
+);
 
   // FORMAT GVIZ
  const gviz = str.match(
