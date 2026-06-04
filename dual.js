@@ -11,29 +11,11 @@ const DAYS = [
 
 function getDayName(dateStr){
 
-    if(!dateStr) return "";
-
-    const parts =
-        dateStr.split(/[\/\-]/);
-
-    if(parts.length !== 3)
-        return "";
-
-    const month =
-        Number(parts[0]);
-
-    const day =
-        Number(parts[1]);
-
-    const year =
-        Number(parts[2]);
-
     const date =
-        new Date(
-            year,
-            month - 1,
-            day
-        );
+        parseDate(dateStr);
+
+    if(!date)
+        return "";
 
     return date
         .toLocaleDateString(
@@ -43,6 +25,18 @@ function getDayName(dateStr){
             }
         )
         .toUpperCase();
+}
+
+function parseDate(dateStr){
+
+    const date =
+        new Date(dateStr);
+
+    if(isNaN(date)){
+        return null;
+    }
+
+    return date;
 }
 
 function timeToMinutes(time){
@@ -77,20 +71,24 @@ function createHourLines(){
 
 function getWeekDates(){
 
-    const today =
-        new Date();
+    const today = new Date();
+
+    // reset jam
+    today.setHours(0,0,0,0);
 
     const monday =
         new Date(today);
 
+    const day =
+        today.getDay();
+
+    const diff =
+        day === 0
+        ? -6
+        : 1 - day;
+
     monday.setDate(
-        today.getDate()
-        -
-        (
-            today.getDay()===0
-            ?6
-            :today.getDay()-1
-        )
+        today.getDate() + diff
     );
 
     const dates=[];
@@ -121,9 +119,23 @@ function getWeekDates(){
 function getRoomStats(room,data){
 
     const bookings =
-        data.filter(
-            x => x.room === room
+    data.filter(x => {
+
+        const start =
+            String(x.start || "")
+            .trim();
+
+        const end =
+            String(x.end || "")
+            .trim();
+
+        return (
+            x.room === room &&
+            start !== "" &&
+            end !== ""
         );
+
+    });
 
     const total =
         bookings.length;
@@ -163,15 +175,40 @@ function buildMeetingBlocks(dayMeetings){
 
     dayMeetings.forEach(meeting=>{
 
-        const start =
-            timeToMinutes(
-                meeting.start
-            );
+    const startText =
+        String(
+            meeting.start || ""
+        ).trim();
 
-        const end =
-            timeToMinutes(
-                meeting.end
-            );
+    const endText =
+        String(
+            meeting.end || ""
+        ).trim();
+
+    if(
+        startText === "" ||
+        endText === ""
+    ){
+        return;
+    }
+
+    const start =
+        timeToMinutes(
+            startText
+        );
+
+    const end =
+        timeToMinutes(
+            endText
+        );
+
+        if(
+    isNaN(start) ||
+    isNaN(end) ||
+    end <= start
+){
+    return;
+}
 
         const dayStart =
             START_HOUR * 60;
@@ -190,7 +227,13 @@ function buildMeetingBlocks(dayMeetings){
 
         /* minimum width agar meeting pendek tetap terbaca */
 
-        width = Math.max(width,17);
+        width = Math.max(width,5);
+        
+
+        if(left + width > 100){
+            width = 100 - left;
+        }
+        width -= 1;
 
         html += `
 
@@ -223,66 +266,6 @@ function buildMeetingBlocks(dayMeetings){
     return html;
 }
 
-function getDatesFromSheet(roomData){
-
-    const uniqueDates =
-        [...new Set(
-            roomData
-                .map(x => x.date)
-        )];
-
-    uniqueDates.sort((a,b)=>{
-
-        const [m1,d1,y1] =
-            a.split(/[\/\-]/);
-
-        const [m2,d2,y2] =
-            b.split(/[\/\-]/);
-
-        return (
-            new Date(y1,m1-1,d1)
-            -
-            new Date(y2,m2-1,d2)
-        );
-
-    });
-
-    return uniqueDates.slice(0,5);
-}
-
-function formatDisplayDate(dateStr){
-
-    const [month,day,year] =
-        dateStr.split(/[\/\-]/);
-
-    const date =
-        new Date(
-            year,
-            month-1,
-            day
-        );
-
-    return {
-        dayName:
-            date.toLocaleDateString(
-                "en-US",
-                {
-                    weekday:"short"
-                }
-            )
-            .toUpperCase(),
-
-        dateText:
-            date.toLocaleDateString(
-                "en-GB",
-                {
-                    day:"2-digit",
-                    month:"short"
-                }
-            )
-    };
-}
-
 function renderRoom(room,data,targetId){
 
     const roomData =
@@ -297,9 +280,7 @@ function renderRoom(room,data,targetId){
         );
 
     const weekDates =
-    getDatesFromSheet(
-        roomData
-    );
+        getWeekDates();
 
     let html = `
 
@@ -316,12 +297,6 @@ function renderRoom(room,data,targetId){
             </div>
 
         </div>
-
-        <div class="utilization">
-
-            <div class="util-badge">
-                ${stats.utilization}% utilization
-            </div>
 
             <div class="booking-count">
                 ${stats.total} bookings this week
@@ -348,20 +323,34 @@ function renderRoom(room,data,targetId){
             <span>15:00</span>
             <span>16:00</span>
             <span>17:00</span>
-
         </div>
 
     </div>
 
     `;
 
-    weekDates.forEach((date,index)=>{
+    DAYS.forEach((day,index)=>{
 
-        const dayMeetings =
-                roomData.filter(
-                    x =>
-                    x.date === date
-                );
+       const currentDate =
+    weekDates[index];
+
+const dayMeetings =
+    roomData.filter(x=>{
+
+        const meetingDate =
+            parseDate(x.date);
+
+        return (
+            meetingDate.toLocaleDateString(
+                "en-GB",
+                {
+                    day:"2-digit",
+                    month:"short"
+                }
+            )
+            === currentDate
+        );
+    });
 
         html += `
 
@@ -370,7 +359,7 @@ function renderRoom(room,data,targetId){
             <div class="day-label">
 
                 <div class="day-name">
-                    ${formatDisplayDate(date).dayName}
+                    ${day.substring(0,3)}
                 </div>
 
                 <div class="day-date">
@@ -404,6 +393,9 @@ async function loadWeeklyRooms(
     room2
 ){
 
+    currentRoom1 = room1;
+    currentRoom2 = room2;
+
     try{
 
         const data =
@@ -428,3 +420,19 @@ async function loadWeeklyRooms(
 
     }
 }
+
+setInterval(() => {
+
+    if(
+        currentRoom1 &&
+        currentRoom2
+    ){
+
+        loadWeeklyRooms(
+            currentRoom1,
+            currentRoom2
+        );
+
+    }
+
+}, 60000);
