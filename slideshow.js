@@ -28,4 +28,4 @@ setTimeout(()=>{
     window.location.href =
     pages[next];
 
-},30000);
+},5000);
