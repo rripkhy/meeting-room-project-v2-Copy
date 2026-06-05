@@ -31,4 +31,4 @@ setTimeout(() => {
     window.location.href =
     pages[next];
 
-}, 5000);
+}, 10000);
