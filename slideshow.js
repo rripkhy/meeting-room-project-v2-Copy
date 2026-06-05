@@ -1,3 +1,4 @@
+console.log("SLIDESHOW VERSION 5 DETIK");
 const pages = [
     "index.html",
     "dual-gebang.html",
@@ -18,7 +19,9 @@ if(
 const index =
 pages.indexOf(current);
 
-setTimeout(()=>{
+setTimeout(() => {
+
+    console.log("PINDAH HALAMAN");
 
     const next =
     (index + 1)
@@ -28,4 +31,4 @@ setTimeout(()=>{
     window.location.href =
     pages[next];
 
-},5000);
+}, 5000);
